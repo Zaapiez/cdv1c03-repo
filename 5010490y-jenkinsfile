@@ -10,20 +10,19 @@ pipeline {
         }
 
         stage('ST2-5010490y: Create Server1 Container') {
-            steps {
-                script {
-                    sh '''
-                        if [ "$(docker ps -aq -f name=server1-5010490y)" ]; then
-                            docker rm -f server1-5010490y >/dev/null 2>&1
-                        fi
+    steps {
+        script {
+            sh '''
+                # Remove previous container if it exists
+                docker rm -f server1-5010490y >/dev/null 2>&1 || true
 
-                        # Run container from svr-image-5010490y in detached mode
-                        docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y >/dev/null
-                    '''
-                    echo 'ST2-5010490y: Server1 is successfully created'
-                }
-            }
+                # Create new container in detached mode, expose Apache on port 32700
+                docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y >/dev/null || exit 1
+            '''
+            echo 'ST2-5010490y: Server1 is successfully created'
         }
+    }
+}
 
         stage('ST3-5010490y: Health Check') {
             steps {
