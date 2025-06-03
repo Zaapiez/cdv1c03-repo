@@ -17,7 +17,7 @@ pipeline {
                 docker rm -f server1-5010490y >/dev/null 2>&1 || true
 
                 # Create new container in detached mode, expose Apache on port 32700
-                docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y >/dev/null || exit 1
+                docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y apachectl -D FOREGROUND
             '''
             echo 'ST2-5010490y: Server1 is successfully created'
         }
