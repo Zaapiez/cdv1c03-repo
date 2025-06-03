@@ -2,67 +2,67 @@ pipeline {
     agent any
 
     stages {
-        stage('ST1-YOURPOLITEID') { // Stage 1 name [cite: 22, 57]
+        stage('ST1-5010490Y') { // Stage 1 name [cite: 22, 57]
             steps {
-                echo 'ST1-YOURPOLITEID: Setup Release Environment Completed.' // Task for Stage 1 [cite: 23, 58]
+                echo 'ST1-5010490Y: Setup Release Environment Completed.' // Task for Stage 1 [cite: 23, 58]
             }
         }
 
-        stage('ST2-YOURPOLITEID') { // Stage 2 name [cite: 22, 57]
+        stage('ST2-5010490Y') { // Stage 2 name [cite: 22, 57]
             steps {
                 script {
                     // Hint: Remove container from previous run before creating a new one [cite: 25, 60]
                     sh '''
-                        if [ "$(docker ps -aq -f name=server1-YOURPOLITEID)" ]; then
-                            docker rm -f server1-YOURPOLITEID
+                        if [ "$(docker ps -aq -f name=server1-5010490Y)" ]; then
+                            docker rm -f server1-5010490Y
                         fi
                     '''
-                    // Create a new container named server1-YOURPOLITEID from svr-image-YOURPOLITEID [cite: 24, 59]
+                    // Create a new container named server1-5010490Y from svr-image-5010490Y [cite: 24, 59]
                     // The container must be running continuously (detached mode) [cite: 24, 59]
                     // Apache server must be exposed via host port 32700 [cite: 25, 60]
-                    sh "docker run -d --name server1-YOURPOLITEID -p 32700:80 svr-image-YOURPOLITEID"
-                    echo 'ST2-YOURPOLITEID: Server1 is successfully created' // Task for Stage 2 [cite: 25, 60]
+                    sh "docker run -d --name server1-5010490Y -p 32700:80 svr-image-5010490Y"
+                    echo 'ST2-5010490Y: Server1 is successfully created' // Task for Stage 2 [cite: 25, 60]
                 }
             }
         }
 
-        stage('ST3-YOURPOLITEID') { // Stage 3 name [cite: 22, 57]
+        stage('ST3-5010490Y') { // Stage 3 name [cite: 22, 57]
             steps {
                 script {
                     // Basic health check: Check if container is running
-                    def status = sh(script: "docker inspect -f '{{.State.Running}}' server1-YOURPOLITEID", returnStdout: true).trim()
+                    def status = sh(script: "docker inspect -f '{{.State.Running}}' server1-5010490Y", returnStdout: true).trim()
                     if (status == 'true') {
-                        echo 'ST3-YOURPOLITEID: Server1 is healthy – Health check done' // Task for Stage 3 [cite: 25, 60]
+                        echo 'ST3-5010490Y: Server1 is healthy – Health check done' // Task for Stage 3 [cite: 25, 60]
                     } else {
-                        error('ST3-YOURPOLITEID: Health check failed. Aborting pipeline.')
+                        error('ST3-5010490Y: Health check failed. Aborting pipeline.')
                     }
                 }
             }
         }
 
-        stage('ST4-Parallel-YOURPOLITEID') { // Stage 4 (Parallel) name [cite: 22, 57]
+        stage('ST4-Parallel-5010490Y') { // Stage 4 (Parallel) name [cite: 22, 57]
             parallel {
-                stage('ST4A-YOURPOLITEID') { // Stage 4A name [cite: 22, 57]
+                stage('ST4A-5010490Y') { // Stage 4A name [cite: 22, 57]
                     steps {
-                        echo 'ST4A-YOURPOLITEID: SQLI Check Completed' // Task for Stage 4A [cite: 25, 60]
+                        echo 'ST4A-5010490Y: SQLI Check Completed' // Task for Stage 4A [cite: 25, 60]
                     }
                 }
-                stage('ST4B-YOURPOLITEID') { // Stage 4B name [cite: 22, 57]
+                stage('ST4B-5010490Y') { // Stage 4B name [cite: 22, 57]
                     steps {
-                        echo 'ST4B-YOURPOLITEID: XSS Check Completed' // Task for Stage 4B [cite: 25, 60]
+                        echo 'ST4B-5010490Y: XSS Check Completed' // Task for Stage 4B [cite: 25, 60]
                     }
                 }
                 // This stage is included to strictly meet the requirement of a stage named "ST4-Parallel-<your polite id>"
                 // with the specific echo message, running in parallel with A and B.
-                stage('ST4-Parallel-YOURPOLITEID') { // Stage 4 (Parallel) name [cite: 22, 57]
+                stage('ST4-Parallel-5010490Y') { // Stage 4 (Parallel) name [cite: 22, 57]
                     steps {
-                        echo 'ST4-Parallel-YOURPOLITEID: Security Scrutinises' // Task for Stage 4 (Parallel) [cite: 25, 60]
+                        echo 'ST4-Parallel-5010490Y: Security Scrutinises' // Task for Stage 4 (Parallel) [cite: 25, 60]
                     }
                 }
             }
         }
 
-        stage('ST5-YOURPOLITEID') { // Stage 5 name [cite: 22, 57]
+        stage('ST5-5010490Y') { // Stage 5 name [cite: 22, 57]
             steps {
                 script {
                     def userChoice = input(
@@ -74,17 +74,17 @@ pipeline {
                         ]
                     )
                     if (userChoice == 'Abort') { // If "Abort" is selected, whole pipeline aborts [cite: 27, 62]
-                        error('ST5-YOURPOLITEID: Pipeline Aborted by user.')
+                        error('ST5-5010490Y: Pipeline Aborted by user.')
                     } else { // If "Proceed" is selected
-                        echo 'ST5-YOURPOLITEID: Continue the pipeline.' [cite: 26, 61]
+                        echo 'ST5-5010490Y: Continue the pipeline.' [cite: 26, 61]
                     }
                 }
             }
         }
 
-        stage('ST6-YOURPOLITEID') { // Stage 6 name [cite: 22, 57]
+        stage('ST6-5010490Y') { // Stage 6 name [cite: 22, 57]
             steps {
-                echo 'ST6-YOURPOLITEID: Ready for next phase' // Task for Stage 6 [cite: 27, 62]
+                echo 'ST6-5010490Y: Ready for next phase' // Task for Stage 6 [cite: 27, 62]
             }
         }
     }
@@ -94,7 +94,7 @@ pipeline {
             echo 'Pipeline execution complete.'
             // Optional: Clean up container after pipeline finishes, regardless of success or failure
             // This ensures a clean state for the next run and fulfills the "remove from previous run" hint.
-            sh "docker rm -f server1-YOURPOLITEID || true" // '|| true' prevents pipeline failure if container is already gone
+            sh "docker rm -f server1-5010490Y || true" // '|| true' prevents pipeline failure if container is already gone
         }
     }
 }
