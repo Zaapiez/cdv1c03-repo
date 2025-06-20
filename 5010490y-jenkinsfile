@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
     agent any
 
     stages {
@@ -10,16 +10,16 @@
         }
 
         stage('ST2-5010490y: Create Server1 Container') {
-  	  steps {
-       		 script {
-            sh '''
-                docker rm -f server1-5010490y || true
-                docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y apachectl -D FOREGROUND
-            '''
-            echo 'ST2-5010490y: Server1 is successfully created'
+            steps {
+                script {
+                    sh '''
+                        docker rm -f server1-5010490y || true
+                        docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y apachectl -D FOREGROUND
+                    '''
+                    echo 'ST2-5010490y: Server1 is successfully created'
+                }
+            }
         }
-    }
-}
 
         stage('ST3-5010490y: Health Check') {
             steps {
@@ -51,17 +51,24 @@
 
         stage('ST5-5010490y: User Confirmation') {
             steps {
-         script {
+                script {
                     def userChoice = input(
-                            id: 'deploymentApproval',
+                        id: 'deploymentApproval',
                         message: 'Continue the pipeline?',
                         ok: 'Submit',
-                    parameters: [choice(name: 'Deployment Decision',choices: ['Yes, proceed', 'No, abort'],description: 'Please confirm your decision.')]
-    					)
+                        parameters: [
+                            choice(
+                                name: 'Deployment Decision',
+                                choices: ['Yes, proceed', 'No, abort'],
+                                description: 'Please confirm your decision.'
+                            )
+                        ]
+                    )
 
                     if (userChoice == 'No, abort') {
                         currentBuild.result = 'ABORTED'
                         echo 'ST5-5010490y: Pipeline Aborted by user.'
+                        return
                     } else {
                         echo 'ST5-5010490y: Continue the pipeline.'
                     }
@@ -69,19 +76,19 @@
             }
         }
 
-       stage('ST6-5010490y: Next Phase Prep') {
-    when {
-        expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        stage('ST6-5010490y: Next Phase Prep') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                echo 'ST6-5010490y : Ready for next phase'
+            }
+        }
     }
-    steps {
-        echo 'ST6-5010490y : Ready for next phase'
-    }
-}
 
     post {
         always {
             echo 'Pipeline execution complete.'
         }
     }
-}
 }
