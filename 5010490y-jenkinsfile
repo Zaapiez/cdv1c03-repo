@@ -1,0 +1,86 @@
+ pipeline {
+    agent any
+
+    stages {
+
+        stage('ST1-5010490y: Setup Environment1') {
+            steps {
+                echo 'ST1-5010490y: Setup Release Environment Completed.'
+            }
+        }
+
+        stage('ST2-5010490y: Create Server1 Container') {
+  	  steps {
+       		 script {
+            sh '''
+                docker rm -f server1-5010490y || true
+                docker run -d --name server1-5010490y -p 32700:80 svr-image-5010490y apachectl -D FOREGROUND
+            '''
+            echo 'ST2-5010490y: Server1 is successfully created'
+        }
+    }
+}
+
+        stage('ST3-5010490y: Health Check') {
+            steps {
+                script {
+                    def status = sh(script: "docker inspect -f '{{.State.Running}}' server1-5010490y", returnStdout: true).trim()
+                    if (status == 'true') {
+                        echo 'ST3-5010490y: Server1-5010490y is healthy.'
+                    } else {
+                        error('ST3-5010490y: Health check failed. Aborting pipeline.')
+                    }
+                }
+            }
+        }
+
+        stage('ST4-5010490y: Security Scrutinises') {
+            parallel {
+                stage('ST4A-5010490y: SQLI Check') {
+                    steps {
+                        echo 'ST4A-5010490y: SQLI Check Completed'
+                    }
+                }
+                stage('ST4B-5010490y: XSS Check') {
+                    steps {
+                        echo 'ST4B-5010490y: XSS Check Completed'
+                    }
+                }
+            }
+        }
+
+        stage('ST5-5010490y: User Confirmation') {
+            steps {
+         script {
+                    def userChoice = input(
+                            id: 'deploymentApproval',
+                        message: 'Continue the pipeline?',
+                        ok: 'Submit',
+                    parameters: [choice(name: 'Deployment Decision',choices: ['Yes, proceed', 'No, abort'],description: 'Please confirm your decision.')]
+    					)
+
+                    if (userChoice == 'No, abort') {
+                        currentBuild.result = 'ABORTED'
+                        echo 'ST5-5010490y: Pipeline Aborted by user.'
+                    } else {
+                        echo 'ST5-5010490y: Continue the pipeline.'
+                    }
+                }
+            }
+        }
+
+       stage('ST6-5010490y: Next Phase Prep') {
+    when {
+        expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+    }
+    steps {
+        echo 'ST6-5010490y : Ready for next phase'
+    }
+}
+
+    post {
+        always {
+            echo 'Pipeline execution complete.'
+        }
+    }
+}
