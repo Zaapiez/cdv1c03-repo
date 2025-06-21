@@ -26,7 +26,7 @@ pipeline {
                 script {
                     def status = sh(script: "docker inspect -f '{{.State.Running}}' server1-5010490y", returnStdout: true).trim()
                     if (status == 'true') {
-                        echo 'ST3-5010490y: Server1-5010490y is healthy.'
+                        echo 'ST3-5010490y: Server1 is healthy.'
                     } else {
                         error('ST3-5010490y: Health check failed. Aborting pipeline.')
                     }
