@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('ST1-5010490y: Setup Environment1') {
+        stage('ST1-5010490y: Setup Environment') {
             steps {
                 echo 'ST1-5010490y: Setup Release Environment Completed.'
             }
